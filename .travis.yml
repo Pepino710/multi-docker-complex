@@ -10,14 +10,27 @@ script:
 
 after_success:
   # Build all containers
-  - docker build -t josefruzicka/multi-docker-react-client ./react-client
-  - docker build -t josefruzicka/multi-docker-nginx ./nginx
-  - docker build -t josefruzicka/multi-docker-server ./server
-  - docker build -t josefruzicka/multi-docker-worker ./worker
+  - docker build -t pepino710/multi-docker-react-client ./react-client
+  - docker build -t pepino710/multi-docker-nginx ./nginx
+  - docker build -t pepino710/multi-docker-server ./server
+  - docker build -t pepino710/multi-docker-worker ./worker
   # Log in to the docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # Take those images and push them to docker hub
-  - docker push josefruzicka/multi-docker-react-client
-  - docker push josefruzicka/multi-docker-nginx
-  - docker push josefruzicka/multi-docker-server
-  - docker push josefruzicka/multi-docker-worker
+  - docker push pepino710/multi-docker-react-client
+  - docker push pepino710/multi-docker-nginx
+  - docker push pepino710/multi-docker-server
+  - docker push pepino710/multi-docker-worker
+
+deploy:
+  provider: elasticbeanstalk
+  region: : "us-east-2"
+  app: "multi-docker"
+  env: "MultiDocker-env "
+  bucket_name: "elasticbeanstalk-us-east-2-312258424663"
+  bucket_path: "multi-docker"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: $AWS_SECRET_KEY
